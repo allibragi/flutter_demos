@@ -29,6 +29,8 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      useSafeArea:
+          true, // this is to not overlap device psecific notch or cameras or sensors
       isScrollControlled:
           true, //take all the aviable space and hopefully the keyboard don't overlap the form
       context: context,
@@ -74,6 +76,11 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    // build method is called again when the device is rotated
+    // or the window is changed on desktop
+    final width = MediaQuery.of(context).size.width;
+    //print(MediaQuery.of(context).size.height);
+
     Widget mainContent = const Center(
       child: Text('No expenses found. Sart adding nome!'),
     );
@@ -95,14 +102,25 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _registeredExpenses),
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
     );
   }
 }

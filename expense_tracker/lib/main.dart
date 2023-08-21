@@ -1,7 +1,15 @@
 import 'package:expense_tracker/widgets/expenses.dart';
 import 'package:flutter/material.dart';
+//import 'package:flutter/services.dart';
 
 void main() {
+  // We can set the allowed orientation of the app
+  // in the code below only portrait mode will be aviable
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  // ]).then((value) => runApp(const MyApp()));
+
   runApp(const MyApp());
 }
 
