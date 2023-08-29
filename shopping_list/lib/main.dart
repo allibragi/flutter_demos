@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list/widgets/grocery_list.dart';
 
-//Azure Cosmos DB
+//https://firebase.google.com/docs/reference/rest/database?hl=it
 
 void main() {
   runApp(const MyApp());
