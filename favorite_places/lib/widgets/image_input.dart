@@ -18,7 +18,7 @@ class _ImageInputState extends State<ImageInput> {
     //For specific platform see https://pub.dev/packages/image_picker
     final imagePicker = ImagePicker();
     final picketImage = await imagePicker.pickImage(
-      source: ImageSource.camera,
+      source: ImageSource.gallery,
       maxWidth: 600,
     );
 

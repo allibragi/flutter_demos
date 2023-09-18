@@ -27,6 +27,25 @@ class _LocationInputState extends State<LocationInput> {
     return 'https://maps.geoapify.com/v1/staticmap?style=osm-carto&width=600&height=300&center=lonlat:$lng,$lat&marker=lonlat:$lng,$lat&zoom=16&apiKey=bdbcb6019c4947e094deee40060cfe4b';
   }
 
+  void _savePlace(double lat, double lng) async {
+    final url = Uri.parse(
+        'https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lng&format=json');
+    final response = await http.get(url);
+    final resData = json.decode(response.body);
+    final address = resData['display_name'];
+
+    setState(() {
+      _pickedLocation = PlaceLocation(
+        latitude: lat,
+        longitude: lng,
+        address: address,
+      );
+      _isGettingLocation = false;
+    });
+
+    widget.onSelectLocation(_pickedLocation!);
+  }
+
   void _getCurrentLocation() async {
     //For specific platform see https://pub.dev/packages/location
 
@@ -64,22 +83,33 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    final url = Uri.parse(
-        'https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lng&format=json');
-    final response = await http.get(url);
-    final resData = json.decode(response.body);
-    final address = resData['display_name'];
+    _savePlace(lat, lng);
+  }
 
-    setState(() {
-      _pickedLocation = PlaceLocation(
-        latitude: lat,
-        longitude: lng,
-        address: address,
-      );
-      _isGettingLocation = false;
-    });
+  void _selectOnMap() async {
+    /*
+    final pickedLocation = await Navigator.of(context).push<LatLong>(
+      MaterialPageRoute(
+        builder: (ctx) => MapScreen(
+          location: PlaceLocation(
+            latitude:
+                _pickedLocation == null ? 37.422 : _pickedLocation!.latitude,
+            longitude:
+                _pickedLocation == null ? -122.084 : _pickedLocation!.longitude,
+            address: '',
+          ),
+        ),
+      ),
+    );
 
-    widget.onSelectLocation(_pickedLocation!);
+    if (pickedLocation == null) {
+      return;
+    }
+
+    _savePlace(pickedLocation.latitude, pickedLocation.longitude);
+    */
+
+    _savePlace(37.422, -122.084);
   }
 
   @override
@@ -128,7 +158,7 @@ class _LocationInputState extends State<LocationInput> {
               label: const Text('Get current location'),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _selectOnMap,
               icon: const Icon(Icons.map),
               label: const Text('Select on map'),
             )
